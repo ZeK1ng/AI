@@ -101,8 +101,12 @@ def depthFirstSearch(problem):
     
         if(problem.isGoalState(currNode.state)):
             return currNode.path
-    
+
+        if currNode.state in visited:
+            continue
+
         visited.add(currNode.state)
+    
 
         for point,direction,_ in problem.getSuccessors(currNode.state):
             if  point not in visited :
@@ -119,12 +123,16 @@ def breadthFirstSearch(problem):
     queue = util.Queue()
     queue.push(start)
     visited = set()
+
     while not queue.isEmpty() :
         currNode = queue.pop()
     
         if(problem.isGoalState(currNode.state)):
             return currNode.path
-    
+
+        if currNode.state in visited:
+            continue
+
         visited.add(currNode.state)
 
         for point,direction,_ in problem.getSuccessors(currNode.state):
@@ -137,7 +145,30 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start = Node(problem.getStartState(),[])
+    pq = util.PriorityQueue()
+    pq.push(start,0)
+    
+    visited = set()
+
+    while not pq.isEmpty():
+
+        currNode= pq.pop()
+
+        if(problem.isGoalState(currNode.state)):
+            return currNode.path
+        
+        if currNode.state in visited:
+            continue
+        
+        visited.add(currNode.state)
+        
+        for point,direction,cost in problem.getSuccessors(currNode.state):
+            if point not in visited:
+                newPath = currNode.path +[direction]
+                nextNode = Node(point,newPath)
+                pq.push(nextNode,cost+problem.getCostOfActions(currNode.path))
+    return []
 
 def nullHeuristic(state, problem=None):
     """
@@ -149,7 +180,30 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start = Node(problem.getStartState(),[])
+    pq = util.PriorityQueue()
+    pq.push(start,0)
+    
+    visited = set()
+
+    while not pq.isEmpty():
+
+        currNode= pq.pop()
+
+        if(problem.isGoalState(currNode.state)):
+            return currNode.path
+        
+        if currNode.state in visited:
+            continue
+        
+        visited.add(currNode.state)
+        
+        for point,direction,cost in problem.getSuccessors(currNode.state):
+            if point not in visited:
+                newPath = currNode.path +[direction]
+                nextNode = Node(point,newPath)
+                pq.push(nextNode,cost+problem.getCostOfActions(currNode.path)+heuristic(point,problem))
+    return []
 
 
 # Abbreviations
